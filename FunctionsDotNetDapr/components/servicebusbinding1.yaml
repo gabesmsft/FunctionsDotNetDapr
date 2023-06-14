@@ -1,0 +1,15 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: mybindingforinput
+  namespace: default
+spec:
+  type: bindings.azure.servicebusqueues
+  version: v1
+  metadata:
+  - name: connectionString
+    value: Endpoint=sb://REDACTED_NAMESPACE.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=REDACTED_KEY
+  - name: queueName
+    value: mysbqueue1
+  - name: ttlInSeconds
+    value: 60
