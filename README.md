@@ -3,19 +3,18 @@
 
 [![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fgabesmsft%2FFunctionsDotNetDapr%2Fmaster%2Fdeploy%2Fazuredeploy.json)  [![Visualize](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/visualizebutton.svg?sanitize=true)](http://armviz.io/#/?load=https%3A%2F%2Fraw.githubusercontent.com%2Fgabesmsft%2FFunctionsDotNetDapr%2Fmaster%2Fdeploy%2Fazuredeploy.json)
 
-This sample Azure Resource Manager template deploys a Container App Environment, a Function App on Container Apps, and several Dapr components.
+This sample Azure Resource Manager template deploys a Function App on Container Apps, and several Dapr components.
 
 This application is only for demonstration purposes and is not intended as a production application or as official instructions. Use discretion and best practices in your usage of this application and template.
 
 ## Prerequisites
-The secrets component uses an Azure KeyVault. To authenticate to the Keyvault, you must use an AAD application because Managed Identity is currently not available for Function Apps on Container Apps.
-Create an AAD app registration and an AAD app registration secret, and note down the following:
-- The AAD app registration secret
-- The AAD tenant id
-- The AAD application id (client id)
-- The Enterprise application object id. This is **not** the app registration object id.
 
-You will need to enter these fields when you run the template deployment.
+- Deploy a Container App Environment. For now, it cannot be a workload profile-enabled Environment. You can use [this template](https://github.com/azureossd/Container-Apps/tree/master/ContainerAppEnvironment/deploy) to deploy a Container App Environment, but be sure to set the workloadProfileEnabled parameter to false.
+- Optional: If you set the DisableDaprSecretComponent to false, the secrets component uses an Azure KeyVault. To authenticate to the Keyvault, you must use an AAD application because Managed Identity is currently not available for Function Apps on Container Apps. Create an AAD app registration and an AAD app registration secret, and note down the following, which you will need to enter when you run the template deployment:
+  - The AAD app registration secret
+  - The AAD tenant id
+  - The AAD application id (client id)
+  - The Enterprise application object id. This is **not** the app registration object id.
 
 ## Function App
 This Function App does not use the default /api/ base route. Instead, the base route is /, which is configured in the host.json. In the Azure portal, the Function urls might show /api/, which you wil; need to remove the api/ portion of the URL to test the HTTP triggers.

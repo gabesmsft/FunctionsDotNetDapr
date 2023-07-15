@@ -6,31 +6,37 @@
       "defaultValue": "northeurope",
       "type": "String"
     },
+    "DisableDaprSecretComponent": {
+      "type": "Bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "If the DisableDaprSecretComponent is set to false you will need to provide valid values for the AADAppId, AADObjectId, and AADAppSecret parameters."
+      }
+    },
     "AADAppId": {
       "type": "SecureString",
+      "defaultValue": "PLACEHOLDER",
       "metadata": {
-        "description": "Provide an AAD App registration client id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "If the DisableDaprSecretComponent is set to false, provide an AAD App registration client id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "AADObjectId": {
       "type": "SecureString",
+      "defaultValue": "mysbqueue1",
       "metadata": {
-        "description": "Provide an AAD Enterprise Application object id. Find this on the Enterprise Application that is associated with the app registration. This is NOT the same thing as the AAD App registration object id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "If the DisableDaprSecretComponent is set to false, provide an AAD Enterprise Application object id. Find this on the Enterprise Application that is associated with the app registration. This is NOT the same thing as the AAD App registration object id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "AADAppSecret": {
       "type": "SecureString",
+      "defaultValue": "mysbqueue1",
       "metadata": {
-        "description": "Provide the AAD App registration secret. The AAD App registration must be created ahead of time. This App registration will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "If the DisableDaprSecretComponent is set to false, provide the AAD App registration secret. The AAD App registration must be created ahead of time. This App registration will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "environmentName": {
       "type": "string",
       "defaultValue": "[concat('ContainerAppEnv-', uniqueString(resourceGroup().id))]"
-    },
-    "workspaceName": {
-      "type": "string",
-      "defaultValue": "[concat('LAWorkspace-', uniqueString(resourceGroup().id))]"
     },
     "functionappCI1": {
       "type": "String",
@@ -38,7 +44,7 @@
     },
     "functionapp1": {
       "type": "String",
-      "defaultValue": "[concat('daprfunctionapp1-', uniqueString(resourceGroup().id))]"
+      "defaultValue": "[concat('daprfunctionapp2-', uniqueString(resourceGroup().id))]"
     },
     "backendDaprAppId": {
       "type": "String",
@@ -84,13 +90,26 @@
     },
     "keyVaultName1": {
       "type": "string",
-      "defaultValue": "[concat('keyvault1-', uniqueString(resourceGroup().id))]"
+      "defaultValue": "[concat('keyvault1-', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "If the DisableDaprSecretComponent is set to false, the Key Vault will be deployed."
+      }
     },
     "storageBlobContainerName": {
       "type": "string",
       "defaultValue": "mystatestorecontainer1",
       "metadata": {
         "description": "Name of the Storage blob container for state store"
+      }
+    },
+    "useConsumptionWorkloadProfile": {
+      "type": "bool",
+      "defaultValue": false,
+      "allowedValues": [
+        false
+      ],
+      "metadata": {
+        "description": "Placeholder until Function Apps can be deployed to workload-profile enabled Container App Environments."
       }
     }
   },
@@ -103,7 +122,7 @@
     "binding1": "mybinding1",
     "binding2": "mybinding2",
     "statestore": "mystatestore",
-    "pubsub":  "mypubsub1"
+    "pubsub": "mypubsub1"
   },
   "resources": [
     {
@@ -200,6 +219,7 @@
       ]
     },
     {
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2021-11-01-preview",
       "name": "[parameters('keyVaultName1')]",
@@ -220,6 +240,7 @@
       }
     },
     {
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2021-11-01-preview",
       "name": "[concat(parameters('keyVaultName1'), '/', 'mysecret1')]",
@@ -231,6 +252,7 @@
       ]
     },
     {
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2021-11-01-preview",
       "name": "[concat(parameters('keyVaultName1'), '/', 'mysecret2')]",
@@ -242,6 +264,7 @@
       ]
     },
     {
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2021-11-01-preview",
       "name": "[concat(parameters('keyVaultName1'), '/', 'mysecret3')]",
@@ -253,43 +276,10 @@
       ]
     },
     {
-      "apiVersion": "2020-08-01",
-      "name": "[parameters('workspaceName')]",
-      "type": "Microsoft.OperationalInsights/workspaces",
-      "location": "[parameters('location')]",
-      "properties": {
-        "sku": {
-          "name": "PerGB2018"
-        },
-        "retentionInDays": 30
-      }
-    },
-    {
-      "apiVersion": "2022-01-01-preview",
-      "name": "[parameters('environmentName')]",
-      "type": "Microsoft.App/managedEnvironments/",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName'))]"
-      ],
-      "properties": {
-        "type": "managed",
-        "internalLoadBalancerEnabled": false,
-        "appLogsConfiguration": {
-          "destination": "log-analytics",
-          "logAnalyticsConfiguration": {
-            "customerId": "[reference(concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').customerId]",
-            "sharedKey": "[listKeys(concat('Microsoft.OperationalInsights/workspaces/', parameters('workspaceName')), '2020-08-01').primarySharedKey]"
-          }
-        }
-      }
-    },
-    {
-      "apiVersion": "2022-01-01-preview",
+      "apiVersion": "2023-05-01",
       "type": "Microsoft.App/managedEnvironments/daprComponents",
       "name": "[concat(parameters('environmentName'), '/', variables('binding1'))]",
       "dependsOn": [
-        "[concat('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "[resourceId('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
       ],
       "properties": {
@@ -323,11 +313,10 @@
       }
     },
     {
-      "apiVersion": "2022-01-01-preview",
+      "apiVersion": "2023-05-01",
       "type": "Microsoft.App/managedEnvironments/daprComponents",
       "name": "[concat(parameters('environmentName'), '/', variables('binding2'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts/queueServices/queues', parameters('storageAccountName'), 'default', parameters('storageQueueName'))]"
       ],
       "properties": {
@@ -369,11 +358,10 @@
       }
     },
     {
-      "apiVersion": "2022-01-01-preview",
+      "apiVersion": "2023-05-01",
       "type": "Microsoft.App/managedEnvironments/daprComponents",
       "name": "[concat(parameters('environmentName'), '/', variables('statestore'))]",
       "dependsOn": [
-        "[concat('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "[resourceId('Microsoft.Storage/storageAccounts/blobServices/containers', parameters('storageAccountName'), 'default', parameters('storageBlobContainerName'))]"
       ],
       "properties": {
@@ -412,11 +400,10 @@
       }
     },
     {
-      "apiVersion": "2022-01-01-preview",
+      "apiVersion": "2023-05-01",
       "type": "Microsoft.App/managedEnvironments/daprComponents",
       "name": "[concat(parameters('environmentName'), '/', variables('pubsub'))]",
       "dependsOn": [
-        "[concat('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "[resourceId('Microsoft.ServiceBus/namespaces/topics/authorizationRules',parameters('serviceBusNamespaceNAme'),parameters('serviceBusTopicName'),variables('policySBTopic'))]"
       ],
       "properties": {
@@ -454,6 +441,7 @@
       "properties": {
         "name": "[parameters('functionapp1')]",
         "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
+        "workloadProfileName": "[if(parameters('useConsumptionWorkloadProfile'), 'Consumption', json('null'))]",
         "siteConfig": {
           "linuxFxVersion": "[parameters('functionappCI1')]",
           "appSettings": [
@@ -468,12 +456,17 @@
             {
               "name": "backendDaprAppId",
               "value": "[parameters('functionapp1')]"
+            },
+            {
+              "name": "DisableDaprSecretComponent",
+              "value": "[parameters('DisableDaprSecretComponent')]"
             }
           ]
         }
       }
     },
     {
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName1'))]",
@@ -488,11 +481,11 @@
       ]
     },
     {
-      "apiVersion": "2022-01-01-preview",
+      "condition": "[not(parameters('DisableDaprSecretComponent'))]",
+      "apiVersion": "2023-05-01",
       "type": "Microsoft.App/managedEnvironments/daprComponents",
       "name": "[concat(parameters('environmentName'), '/', 'mysecretstore')]",
       "dependsOn": [
-        "[concat('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "[concat('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentName'))]"
       ],
       "properties": {
