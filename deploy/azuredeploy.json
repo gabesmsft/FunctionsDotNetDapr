@@ -17,21 +17,21 @@
       "type": "SecureString",
       "defaultValue": "PLACEHOLDER",
       "metadata": {
-        "description": "If the DisableDaprSecretComponent is set to false, provide an AAD App registration client id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "A value of PLACEHOLDER has been populated. If the DisableDaprSecretComponent is set to false, provide an AAD App registration client id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "AADObjectId": {
       "type": "SecureString",
       "defaultValue": "mysbqueue1",
       "metadata": {
-        "description": "If the DisableDaprSecretComponent is set to false, provide an AAD Enterprise Application object id. Find this on the Enterprise Application that is associated with the app registration. This is NOT the same thing as the AAD App registration object id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "A value of PLACEHOLDER has been populated. If the DisableDaprSecretComponent is set to false, provide an AAD Enterprise Application object id. Find this on the Enterprise Application that is associated with the app registration. This is NOT the same thing as the AAD App registration object id. The AAD App registration must be created ahead of time. This App registration will be assigned Key Vault secret user permissions to the Key Vault that is created, and will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "AADAppSecret": {
       "type": "SecureString",
       "defaultValue": "mysbqueue1",
       "metadata": {
-        "description": "If the DisableDaprSecretComponent is set to false, provide the AAD App registration secret. The AAD App registration must be created ahead of time. This App registration will be used to authenticate the Dapr secret store component to the Key Vault."
+        "description": "A value of PLACEHOLDER has been populated. If the DisableDaprSecretComponent is set to false, provide the AAD App registration secret. The AAD App registration must be created ahead of time. This App registration will be used to authenticate the Dapr secret store component to the Key Vault."
       }
     },
     "environmentName": {
