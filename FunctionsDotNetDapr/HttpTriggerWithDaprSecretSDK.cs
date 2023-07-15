@@ -10,7 +10,7 @@ namespace FunctionsDotNetDapr
 {
     public static class HttpTriggerWithDaprSecretSDK
     {
-
+        [Disable("DisableDaprSecretComponent")]
         [FunctionName("HttpTriggerWithDaprSecretSDK")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "mysecretviadaprsdk")] HttpRequest req,

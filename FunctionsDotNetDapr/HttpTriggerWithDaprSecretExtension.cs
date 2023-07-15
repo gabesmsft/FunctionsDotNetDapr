@@ -11,7 +11,7 @@ namespace FunctionsDotNetDapr
 {
     public static class HttpTriggerWithDaprSecretExtension
     {
-
+        [Disable("DisableDaprSecretComponent")]
         [FunctionName("HttpTriggerWithDaprSecretExtension")]
         public static async Task<IActionResult> Run(
         [HttpTrigger(AuthorizationLevel.Function, "get", Route = "daprsecretextension")] HttpRequest req,

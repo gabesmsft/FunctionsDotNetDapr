@@ -13,6 +13,7 @@ namespace FunctionsDotNetDapr
 
         private static HttpClient httpClient = new HttpClient();
 
+        [Disable("DisableDaprSecretComponent")]
         [FunctionName("HttpTriggerWithDaprSecretAPI")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "mysecretviadaprapi")] HttpRequest req,
