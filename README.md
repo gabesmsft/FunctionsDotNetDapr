@@ -27,8 +27,8 @@ Any references to triggering Dapr in the subsequent sections are not intended fo
 | Function name | Dapr component type(s) | HTTP method (if applicable) | HTTP route (if applicable) | Description |
 | ------------- | ---------------------- | --------------------------- | -------------------------- | ----------- |
 | DaprSubscribe | Pubsub trigger| GET | /dapr/subscribe | This Function is not intended for you to trigger. This Function is present to enable programmatic PubSub subscription. This Function will automatically run one time upon startup, so that the Pubsub consumer/trigger can listen for events. |
-| HttpTriggerWithDaprPubSubAPIIOutput | Pubsub output / publisher | POST | /mypubsubpublisher | Publishes a message to the pubsub component, which in turn should trigger |
-| HttpTriggerWithDaprPubSubAPITrigger | Pubsub trigger / consumer | POST | / /mypubsubconsumer | Triggers when a message is put in the pubsub component |
+| HttpTriggerWithDaprPubSubAPIOutput | Pubsub output / publisher | POST | /mypubsubpublisher | Publishes a message to the pubsub component, which in turn should trigger |
+| HttpTriggerWithDaprPubSubAPITrigger | Pubsub trigger / consumer | POST | /mypubsubconsumer | Triggers when a message is put in the pubsub component |
 | HttpTriggerWithDaprBindingAPITriggerAndOutput | Binding trigger and output | POST | /mybinding1 | Listens for message in the mybinding1 component (a Service Bus queue), and when triggered, writes a message to the mybinding2 component (a Storage queue). You can also manually trigger this Function to put a message in the mybinding2 component. |
 | HttpTriggerWithDaprBindingSDKOutput | Binding output | POST | /bindingviasdk | Writes a message to the mybinding1 component (a Service Bus queue), which in turn should trigger the HttpTriggerWithDaprBindingAPITriggerAndOutput Function. |
 | HttpTriggerWithDaprSecretAPI | Secret output | GET | /mysecretviadaprapi | Gets a secret from the secret store, using the Dapr API. |

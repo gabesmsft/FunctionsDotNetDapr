@@ -16,7 +16,7 @@ namespace FunctionsDotNetDapr
 
         private static HttpClient httpClient = new HttpClient();
 
-        [FunctionName("HttpTriggerWithDaprPubSubAPIIOutput")]
+        [FunctionName("HttpTriggerWithDaprPubSubAPIOutput")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "mypubsubpublisher")] HttpRequest req,
             ILogger log)
