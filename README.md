@@ -9,7 +9,7 @@ This application is only for demonstration purposes and is not intended as a pro
 
 ## Prerequisites
 
-- Deploy a Container App Environment. For now, it cannot be a workload profile-enabled Environment. You can use [this template](https://github.com/azureossd/Container-Apps/tree/master/ContainerAppEnvironment/deploy) to deploy a Container App Environment, but be sure to set the workloadProfileEnabled parameter to false.
+- Deploy a Container App Environment to one of the regions listed [here](https://learn.microsoft.com/azure/azure-functions/functions-container-apps-hosting#considerations-for-container-apps-hosting). For now, it cannot be a workload profile-enabled Environment. You can use [this template](https://github.com/azureossd/Container-Apps/tree/master/ContainerAppEnvironment/deploy) to deploy a Container App Environment, but be sure to set the workloadProfileEnabled parameter to false.
 - Optional: If you set the DisableDaprSecretComponent to false, the secrets component uses an Azure KeyVault. To authenticate to the Keyvault, you must use an AAD application because Managed Identity is currently not available for Function Apps on Container Apps. Create an AAD app registration and an AAD app registration secret, and note down the following, which you will need to enter when you run the template deployment:
   - The AAD app registration secret
   - The AAD tenant id
