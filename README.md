@@ -9,7 +9,7 @@ This application is only for demonstration purposes and is not intended as a pro
 
 ## Prerequisites
 
-- Deploy a Container App Environment to one of the regions listed [here](https://learn.microsoft.com/azure/azure-functions/functions-container-apps-hosting#considerations-for-container-apps-hosting). For now, it cannot be a workload profile-enabled Environment. You can use [this template](https://github.com/azureossd/Container-Apps/tree/master/ContainerAppEnvironment/deploy) to deploy a Container App Environment, but be sure to set the workloadProfileEnabled parameter to false.
+- Deploy a Container App Environment to one of the regions listed [here](https://learn.microsoft.com/azure/azure-functions/functions-container-apps-hosting#considerations-for-container-apps-hosting). You can use [this template](https://github.com/azureossd/Container-Apps/tree/master/ContainerAppEnvironment/deploy) to deploy a Container App Environment.
 - Optional: If you set the DisableDaprSecretComponent to false, the secrets component uses an Azure KeyVault. To authenticate to the Keyvault, you must use an AAD application because Managed Identity is currently not available for Function Apps on Container Apps. Create an AAD app registration and an AAD app registration secret, and note down the following, which you will need to enter when you run the template deployment:
   - The AAD app registration secret
   - The AAD tenant id
@@ -27,7 +27,7 @@ Any references to triggering Dapr in the subsequent sections are not intended fo
 | Function name | Dapr component type(s) | HTTP method (if applicable) | HTTP route (if applicable) | Description |
 | ------------- | ---------------------- | --------------------------- | -------------------------- | ----------- |
 | DaprSubscribe | Pubsub trigger| GET | /dapr/subscribe | This Function is not intended for you to trigger. This Function is present to enable programmatic PubSub subscription. This Function will automatically run one time upon startup, so that the Pubsub consumer/trigger can listen for events. |
-| HttpTriggerWithDaprPubSubAPIOutput | Pubsub output / publisher | POST | /mypubsubpublisher | Publishes a message to the pubsub component, which in turn should trigger |
+| HttpTriggerWithDaprPubSubAPIOutput | Pubsub output / publisher | POST | /mypubsubpublisher | Publishes a message to the pubsub component, which in turn should automatically trigger the HttpTriggerWithDaprPubSubAPITrigger function. |
 | HttpTriggerWithDaprPubSubAPITrigger | Pubsub trigger / consumer | POST | /mypubsubconsumer | Triggers when a message is put in the pubsub component |
 | HttpTriggerWithDaprBindingAPITriggerAndOutput | Binding trigger and output | POST | /mybinding1 | Listens for message in the mybinding1 component (a Service Bus queue), and when triggered, writes a message to the mybinding2 component (a Storage queue). You can also manually trigger this Function to put a message in the mybinding2 component. |
 | HttpTriggerWithDaprBindingSDKOutput | Binding output | POST | /bindingviasdk | Writes a message to the mybinding1 component (a Service Bus queue), which in turn should trigger the HttpTriggerWithDaprBindingAPITriggerAndOutput Function. |
@@ -60,3 +60,5 @@ To put a message in the mybinding1 component:
 ```
 curl -H "Content-Type: application/json" -X POST http://localhost:7071/bindingviasdk -d "{\"i like\":\"bacon\"}"
 ```
+
+Verify that HttpTriggerWithDaprBindingAPITriggerAndOutput gets automatically triggered.

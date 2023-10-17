@@ -442,6 +442,15 @@
         "name": "[parameters('functionapp1')]",
         "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments/', parameters('environmentName'))]",
         "workloadProfileName": "[if(parameters('useConsumptionWorkloadProfile'), 'Consumption', json('null'))]",
+		"daprConfig": {
+          "enabled": true,
+          "appId": "[parameters('functionapp1')]",
+          "appPort": 3001,
+          "httpReadBufferSize": "",
+          "httpMaxRequestSize": "",
+          "logLevel": "",
+          "enableApiLogging": true
+        },
         "siteConfig": {
           "linuxFxVersion": "[parameters('functionappCI1')]",
           "appSettings": [
